@@ -1,35 +1,3 @@
-# 秒杀项目基于 SSM
-
-
-
-## 相关技术
-1. Spring&SpringMVC
-2. MyBatis
-3. MySQL
-4. Restful
-5. Bootstrap&jQuery
-
-## 知识点
-1. Mybatis使用与整合Spring技巧
-2. SpringIOC与声明式事务理解
-3. 业务接口封装技巧
-4. SpringMVC和Restful理解和运用
-5. 交互分析和JS模块化开发
-6. 高并发秒杀系统瓶颈点分析
-7. 事务,行级锁,网络延迟等理解
-8. 前端,CDN,缓存理解
-
-## 课程视频
-| 名称              | 地址                           |
-| ----------------- | ------------------------------ |
-| 业务分析与DAO实现 | http://www.imooc.com/learn/587 |
-| Service层实现     | http://www.imooc.com/learn/631 |
-| WEB层实现         | http://www.imooc.com/learn/630 |
-| 并发优化          | http://www.imooc.com/learn/632 |
-
-
-
----
 
 > 以下是详细的过程，可用于复习，或者不看视频的使用，最后有自己遇见的报错的解决方案
 
@@ -947,7 +915,7 @@ public class SeckillServiceTest {
 
 **秒杀 API 的URL 设计**
 
-![1586764815318](E:\笔记\秒杀项目.assets\1586764815318.png)
+![1586764815318](http://images.vsnode.com/mynotes-images/202004/21/220723-497918.png)
 
 ### SpringMVC 
 
@@ -1111,4 +1079,3 @@ public SeckillExecution executeSeckill(long seckillId, long userPhone, String md
 无法点击秒杀号码输入，这是因为 bootstrap 版本问题，修改版本为 3.3.0 即可
 
 ![1587140536865](http://images.vsnode.com/mynotes-images/202004/18/002218-401828.png)
-
