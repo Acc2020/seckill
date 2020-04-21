@@ -1,6 +1,8 @@
 package com.vsnode.service.impl;
 
+import com.vsnode.config.RedisConfig;
 import com.vsnode.constant.SeckillStateEnum;
+import com.vsnode.dao.cache.RedisDao;
 import com.vsnode.exception.RepeatKillException;
 import com.vsnode.exception.SeckillCloseException;
 import com.vsnode.exception.SeckillException;
@@ -14,7 +16,10 @@ import com.vsnode.service.SeckillService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.DigestUtils;
 
 
@@ -34,6 +39,11 @@ public class SeckillServiceImpl implements SeckillService {
 
     @Autowired
     private SuccessKilledMapper successKilledMapper;
+
+    @Autowired
+    private RedisDao redisDao;
+
+
     // md5 加密加盐
     private final String slat = "1dsaw43dsf4r4fdsf2r";
 
@@ -50,7 +60,25 @@ public class SeckillServiceImpl implements SeckillService {
 
     @Override
     public Exposer exportSeckillUrl(long seckillId) {
-        Seckill seckill = seckillMapper.queryById(seckillId);
+        //  缓存优化通过 redis 降低数据库使用压力，
+        /**
+         *  get grom cache
+         *  if null
+         *  get db
+         *  else
+         *      put cache
+         *  locgoin
+         */
+        // 超时的基础上维护一致性，秒杀一般不允许修改，一般是重建
+        Seckill seckill = redisDao.getSeckill(seckillId);
+        if (seckill == null){
+            seckill = seckillMapper.queryById(seckillId);
+            if (seckill == null){
+                return new Exposer(false,seckillId);
+            } else {
+                redisDao.putSeckill(seckill);
+            }
+        }
         Date startTime = seckill.getStartTime();
         Date endTime = seckill.getEndTime();
         Date nowTime = new Date();
@@ -66,6 +94,7 @@ public class SeckillServiceImpl implements SeckillService {
     }
 
     @Override
+    @Transactional
     public SeckillExecution executeSeckill(long seckillId, long userPhone, String md5)
             throws RepeatKillException, SeckillCloseException, SeckillException {
         if (md5 == null || !md5.equals(getMD5(seckillId))){
