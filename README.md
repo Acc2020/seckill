@@ -24,7 +24,7 @@
 
 SpringBoot不是对Spring功能上的增强，而是提供了一种快速使用Spring的方式，所以本质上和SSM框架差别不大，本人也是为了多练习使用，学习此项目不仅可以学习到秒杀系统的设计流程还能很好的练习一下SpringBoot框架。
 
-**详细笔记查看**
+**详细笔记查看**  
 从环境搭建到优化笔记：[笔记](https://github.com/Acc2020/seckill/blob/master/%E7%A7%92%E6%9D%80%E9%A1%B9%E7%9B%AE.md)
 
 **imooc 课程视频**
